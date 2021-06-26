@@ -12,10 +12,13 @@ class CountdownTimer {
     this.start();
   }
   start() {
-    setInterval(() => {
-      const time = this.targetDate - Date.now();
-      this.getTimerComponents(time);
-    }, 1000);
+    if (this.targetDate > Date.now()) {
+      setInterval(() => {
+        const time = this.targetDate - Date.now();
+
+        this.getTimerEl(this.getTimerComponents(time));
+      }, 1000);
+    }
   }
   getTimerComponents(time) {
     const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
@@ -24,6 +27,9 @@ class CountdownTimer {
     );
     const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
     const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+    return { days, hours, mins, secs };
+  }
+  getTimerEl({ days, hours, mins, secs }) {
     refs.daysEl.textContent = `${days}`;
     refs.hoursEl.textContent = `${hours}`;
     refs.minsEl.textContent = `${mins}`;
